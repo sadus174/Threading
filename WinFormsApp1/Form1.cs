@@ -106,5 +106,30 @@ namespace WinFormsApp1
             mre3.Reset();
             if (myThread3 != null) myThread3.Abort();
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            mre1.Set();
+            label1.Text = "Поток " + myThread1.Name + " запущен";
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {            
+            mre1.Reset();
+            label1.Text = "Поток " + myThread1.Name + " остановлен";
+            
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            mre2.Set();
+            label2.Text = "Поток " + myThread1.Name + " запущен";
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            mre2.Reset();
+            label2.Text = "Поток " + myThread1.Name + " остановлен";
+        }
     }
 }

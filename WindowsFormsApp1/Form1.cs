@@ -1,19 +1,30 @@
+п»їusing System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Threading;
 
-namespace WinFormsApp1
+
+namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-        //Представляет событие синхронизации потока, 
-        //которое при получении сигнала необходимо сбросить вручную. Этот класс не наследуется.
+
+        //РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ СЃРѕР±С‹С‚РёРµ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё РїРѕС‚РѕРєР°, 
+        //РєРѕС‚РѕСЂРѕРµ РїСЂРё РїРѕР»СѓС‡РµРЅРёРё СЃРёРіРЅР°Р»Р° РЅРµРѕР±С…РѕРґРёРјРѕ СЃР±СЂРѕСЃРёС‚СЊ РІСЂСѓС‡РЅСѓСЋ. Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ РЅР°СЃР»РµРґСѓРµС‚СЃСЏ.
         ManualResetEvent mre1 = new ManualResetEvent(false);
         ManualResetEvent mre2 = new ManualResetEvent(false);
         ManualResetEvent mre3 = new ManualResetEvent(false);
 
         public delegate void ThreadStart();
         public delegate void ThreadStop();
-        
-        //Объявляем потоки
+
+        //РћР±СЉСЏРІР»СЏРµРј РїРѕС‚РѕРєРё
         Thread myThread1;
         Thread myThread2;
         Thread myThread3;
@@ -28,31 +39,31 @@ namespace WinFormsApp1
 
         }
 
-        //Метод для первого потока
+        //РњРµС‚РѕРґ РґР»СЏ РїРµСЂРІРѕРіРѕ РїРѕС‚РѕРєР°
         public void MethodTr1()
         {
-            Random rnd = new Random();  
+            Random rnd = new Random();
             for (int i = 0; i < 100; i++)
             {
                 mre1.WaitOne();
-                this.Invoke(new Action(() => { listBox1.Items.Add("Первый поток:" + (i).ToString()); }));
+                this.Invoke(new Action(() => { listBox1.Items.Add("РџРµСЂРІС‹Р№ РїРѕС‚РѕРє:" + (i).ToString()); }));
                 Thread.Sleep(rnd.Next(0, 1000));
             }
         }
 
-        //Метод для второго потока
+        //РњРµС‚РѕРґ РґР»СЏ РІС‚РѕСЂРѕРіРѕ РїРѕС‚РѕРєР°
         public void MethodTr2()
         {
             Random rnd = new Random();
             for (int i = 0; i < 100; i++)
             {
                 mre2.WaitOne();
-                this.Invoke(new Action(() => { listBox2.Items.Add("Второй поток:" + (i).ToString()); }));
+                this.Invoke(new Action(() => { listBox2.Items.Add("Р’С‚РѕСЂРѕР№ РїРѕС‚РѕРє:" + (i).ToString()); }));
                 Thread.Sleep(rnd.Next(1000, 2000));
             }
         }
 
-        //Метод для третьего потока
+        //РњРµС‚РѕРґ РґР»СЏ С‚СЂРµС‚СЊРµРіРѕ РїРѕС‚РѕРєР°
         public void MethodTr3()
         {
             Random rnd = new Random();
@@ -60,30 +71,30 @@ namespace WinFormsApp1
             {
                 mre3.WaitOne();
 
-                this.Invoke(new Action(() => 
+                this.Invoke(new Action(() =>
                 {
-                    this.BackColor = Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255)); 
+                    this.BackColor = Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255));
                 }));
                 Thread.Sleep(rnd.Next(0, 1000));
 
             }
         }
 
-        //Запуск потока 1
+        //Р—Р°РїСѓСЃРє РїРѕС‚РѕРєР° 1
         private void button1_Click(object sender, EventArgs e)
         {
             myThread1 = new Thread(MethodTr1);
             myThread1.Name = "Thread1";
-            myThread1.Start(); // запускаем поток
+            myThread1.Start(); // Р·Р°РїСѓСЃРєР°РµРј РїРѕС‚РѕРє
             mre1.Set();
         }
 
-        //Запуск потока 2
+        //Р—Р°РїСѓСЃРє РїРѕС‚РѕРєР° 2
         private void button2_Click(object sender, EventArgs e)
         {
             myThread2 = new Thread(MethodTr2);
             myThread2.Name = "Thread2";
-            myThread2.Start(); // запускаем поток
+            myThread2.Start(); // Р·Р°РїСѓСЃРєР°РµРј РїРѕС‚РѕРє
             mre2.Set();
         }
 
@@ -91,17 +102,17 @@ namespace WinFormsApp1
         {
             myThread3 = new Thread(MethodTr3);
             myThread3.Name = "Thread3";
-            myThread3.Start(); // запускаем поток
+            myThread3.Start(); // Р·Р°РїСѓСЃРєР°РµРј РїРѕС‚РѕРє
             mre3.Set();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //Останавливаем ManualResetEvent
+            //РћСЃС‚Р°РЅР°РІР»РёРІР°РµРј ManualResetEvent
             mre1.Reset();
             mre2.Reset();
             mre3.Reset();
-            //Если потом запущен, останавливаем его
+            //Р•СЃР»Рё РїРѕС‚РѕРј Р·Р°РїСѓС‰РµРЅ, РѕСЃС‚Р°РЅР°РІР»РёРІР°РµРј РµРіРѕ
             if (myThread1 != null) myThread1.Abort();
             mre2.Reset();
             if (myThread2 != null) myThread2.Abort();
@@ -112,26 +123,26 @@ namespace WinFormsApp1
         private void button4_Click(object sender, EventArgs e)
         {
             mre1.Set();
-            label1.Text = "Поток " + myThread1.Name + " запущен";
+            label1.Text = "РџРѕС‚РѕРє " + myThread1.Name + " Р·Р°РїСѓС‰РµРЅ";
         }
 
         private void button5_Click(object sender, EventArgs e)
-        {            
+        {
             mre1.Reset();
-            label1.Text = "Поток " + myThread1.Name + " остановлен";
-            
+            label1.Text = "РџРѕС‚РѕРє " + myThread1.Name + " РѕСЃС‚Р°РЅРѕРІР»РµРЅ";
+
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
             mre2.Set();
-            label2.Text = "Поток " + myThread1.Name + " запущен";
+            label2.Text = "РџРѕС‚РѕРє " + myThread1.Name + " Р·Р°РїСѓС‰РµРЅ";
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
             mre2.Reset();
-            label2.Text = "Поток " + myThread1.Name + " остановлен";
+            label2.Text = "РџРѕС‚РѕРє " + myThread1.Name + " РѕСЃС‚Р°РЅРѕРІР»РµРЅ";
         }
     }
 }
